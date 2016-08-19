@@ -150,16 +150,20 @@ class SendCommand extends Command
     }
 
     /**
-     * @param $item
+     * @param array $item
+     * @param \Scalex\Mailer\Member $member
      */
-    protected function send($item) {
+    protected function send(array $item, Member $member) {
         $this->mailer->send(
             [],
             [],
-            function (Message $message) use ($item) {
-                $message->to($item['email'], $item['first_name'].' '.$item['last_name']);
+            function (Message $message) use ($item, $member) {
+                list($email, $name) = $member->address;
+                $message->to($email, $name);
+                // Add from
                 list($email, $name) = $this->config['from'];
                 $message->from($email, $name);
+                // Add reply to
                 if (array_has($this->config, 'reply')) {
                     list($email, $name) = $this->config['reply'];
                     $message->replyTo($email, $name);
@@ -190,6 +194,11 @@ class SendCommand extends Command
                 for ($i = 0; $i < count($row); ++$i) {
                     $item[$headers[$i]] = $row[$i];
                 }
+
+                if (isset($item['name'])) {
+                    $item['first_name'] = $item['name'];
+                    $item['last_name'] = ' ';
+                }
                 $fields = array_only($item, ['first_name', 'last_name', 'email']);
                 $member = Member::look(array_get($item, 'email'), $this->list->getKey());
                 if (!$member) {
@@ -200,7 +209,7 @@ class SendCommand extends Command
                 $tracks = $member->tracks;
 
                 if ($this->shouldSend($item, $member, $tracks)) {
-                    $this->send($item);
+                    $this->send($item, $member);
                 }
             }
         }
