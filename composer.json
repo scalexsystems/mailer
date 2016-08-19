@@ -1,0 +1,33 @@
+{
+  "name": "scalex/mailer",
+  "description": "A mail merge CLI.",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Rahul Kadyan",
+      "email": "hi@znck.me"
+    }
+  ],
+  "require": {
+    "illuminate/mail": "^5.2",
+    "illuminate/database": "^5.2",
+    "symfony/console": "^3.1",
+    "symfony/process": "^3.1",
+    "illuminate/events": "^5.2",
+    "illuminate/view": "^5.2",
+    "guzzlehttp/guzzle": "^6.2",
+    "phpoffice/phpexcel": "^1.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Scalex\\Mailer\\": "src/"
+    },
+    "classmap": [
+      "migrations"
+    ]
+  },
+  "bin": [
+    "mailer"
+  ]
+}
