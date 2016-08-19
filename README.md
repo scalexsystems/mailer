@@ -44,7 +44,7 @@ $ mailer send
 
 ## Change log
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](https://github.com/scalexsystems/mailer/releases) for more information what has changed recently.
 
 ## Testing
 
@@ -54,7 +54,7 @@ $ composer test
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/scalexsystems/mailer/releases) and [CONDUCT](CONDUCT.md) for details.
+Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details.
 
 ## Security
 
