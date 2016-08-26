@@ -1,7 +1,21 @@
 <?php return [
     // MailGun configuration.
-    'key' => 'key-xxxxxxxxxxxxxxx',
-    'domain' => 'example.com',
+    'default' => 'mailgun',
+
+    'drivers' => [
+        'smtp' => [
+            'host' => 'localhost',
+            'port' => 587,
+            'encryption' => 'tls',
+            'user' => 'foo@example.com',
+            'pass' => '*********',
+        ],
+
+        'mailgun' => [
+            'key' => 'key-xxxxxxxxxxxx',
+            'domain' => 'example.com',
+        ]
+    ],
 
     // Sender configuration.
     'from' => ['foo@example.com', 'Foo Bar',],

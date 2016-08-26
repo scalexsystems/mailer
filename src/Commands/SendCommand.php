@@ -137,15 +137,41 @@ class SendCommand extends Command
     protected function init() {
         $this->blade = new Blade($this->projectRoot, __DIR__.'/../../storage/views');
 
+        $transport = null;
+        $connection_name = array_get($this->config, 'default');
+        if ($connection_name) {
+            $connection = array_get($this->config, 'drivers.'.$connection_name);
+            switch (array_get($connection, 'driver', $connection_name)) {
+                case 'smtp':
+                    $transport = \Swift_SmtpTransport::newInstance(
+                        array_get($connection, 'host'),
+                        array_get($connection, 'port'),
+                        array_get($connection, 'encryption')
+                    )
+                        ->setAuthMode('login')
+                        ->setUsername(array_get($connection, 'user'))
+                        ->setPassword(array_get($connection, 'pass'));
+                    break;
+                case 'mailgun':
+                    $transport = new MailgunTransport(
+                        new Client(),
+                        array_get($connection, 'key'),
+                        array_get($connection, 'domain')
+                    );
+                    break;
+                default:
+                    $transport = new MailgunTransport(
+                        new Client(),
+                        array_get($this->config, 'key'),
+                        array_get($this->config, 'domain')
+                    );
+            }
+        }
+
+
         $this->mailer = new Mailer(
             $this->blade->view(),
-            new Swift_Mailer(
-                new MailgunTransport(
-                    new Client(),
-                    array_get($this->config, 'key'),
-                    array_get($this->config, 'domain')
-                )
-            )
+            new Swift_Mailer($transport)
         );
     }
 
