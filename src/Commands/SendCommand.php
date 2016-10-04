@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Mail\Mailer;
 use Illuminate\Mail\Message;
 use Illuminate\Mail\Transport\MailgunTransport;
+use PHPExcel_Reader_CSV;
 use Scalex\Mailer\MailingList;
 use Scalex\Mailer\Member;
 use Scalex\Mailer\Project;
@@ -113,9 +114,6 @@ class SendCommand extends Command
         $this->resend = $this->input->getOption('resend');
     }
 
-    /**
-     * @return array
-     */
     protected function getPaths() {
         $this->projectRoot = getcwd();
         $this->projectInfoPath = $this->projectRoot."/.mailer.json";
@@ -131,7 +129,7 @@ class SendCommand extends Command
 
             die(-1);
         }
-        $this->config = require $this->configPath;
+        $this->config = require_once($this->configPath);
     }
 
     protected function init() {
@@ -195,14 +193,14 @@ class SendCommand extends Command
                     $message->replyTo($email, $name);
                 }
                 $message->subject($this->config['subject']);
-                $message->setBody($this->blade->view()->make('html', $item)->render(), 'text/html');
-                $message->addPart($this->blade->view()->make('text', $item)->render(), 'text/plain');
+                $message->setBody($this->blade->view()->make('html', $item + compact('message'))->render(), 'text/html');
+                $message->addPart($this->blade->view()->make('text', $item + compact('message'))->render(), 'text/plain');
             }
         );
     }
 
     protected function loadDataAndSendMails() {
-        $reader = new \PHPExcel_Reader_CSV();
+        $reader = new PHPExcel_Reader_CSV();
 
         if (!file_exists($this->dataPath)) {
             $this->output->writeln("<error>Data source is not present.</error> Put data in <info>data.csv</info>");
