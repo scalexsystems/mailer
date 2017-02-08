@@ -65,10 +65,11 @@ class NewCommand extends Command
                 ]
             )
         );
-        copy(__DIR__.'/../../stubs/html.blade.php', $name.'/html.blade.php');
-        copy(__DIR__.'/../../stubs/text.blade.php', $name.'/text.blade.php');
-        copy(__DIR__.'/../../stubs/data.csv', $name.'/data.csv');
-        copy(__DIR__.'/../../stubs/config.php', $name.'/config.php');
+
+        if (!file_exists($name.'/html.blade.php')) copy(__DIR__.'/../../stubs/html.blade.php', $name.'/html.blade.php');
+        if (!file_exists($name.'/text.blade.php')) copy(__DIR__.'/../../stubs/text.blade.php', $name.'/text.blade.php');
+        if (!file_exists($name.'/data.csv')) copy(__DIR__.'/../../stubs/data.csv', $name.'/data.csv');
+        if (!file_exists($name.'/config.php')) copy(__DIR__.'/../../stubs/config.php', $name.'/config.php');
 
         $output->writeln("Write your mail content in <info>html.blade.php</info>.");
         $output->writeln(

@@ -178,11 +178,18 @@ class SendCommand extends Command
      * @param \Scalex\Mailer\Member $member
      */
     protected function send(array $item, Member $member) {
+        list($email, $name) = $member->address;
+
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            $this->output->writeln('Invalid email address: '.$email);
+            return;
+        }
         $this->mailer->send(
             [],
             [],
             function (Message $message) use ($item, $member) {
                 list($email, $name) = $member->address;
+
                 $message->to($email, $name);
                 // Add from
                 list($email, $name) = $this->config['from'];
