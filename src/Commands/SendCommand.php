@@ -180,7 +180,7 @@ class SendCommand extends Command
     protected function send(array $item, Member $member) {
         list($email, $name) = $member->address;
 
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+        if (filter_var(trim($email), FILTER_VALIDATE_EMAIL) === false) {
             $this->output->writeln('Invalid email address: '.$email);
             return;
         }
@@ -190,7 +190,7 @@ class SendCommand extends Command
             function (Message $message) use ($item, $member) {
                 list($email, $name) = $member->address;
 
-                $message->to($email, $name);
+                $message->to(trim($email), $name);
                 // Add from
                 list($email, $name) = $this->config['from'];
                 $message->from($email, $name);
@@ -201,7 +201,7 @@ class SendCommand extends Command
                 }
                 $message->subject($this->config['subject']);
                 $message->setBody($this->blade->view()->make('html', $item + compact('message'))->render(), 'text/html');
-                $message->addPart($this->blade->view()->make('text', $item + compact('message'))->render(), 'text/plain');
+//                $message->addPart($this->blade->view()->make('text', $item + compact('message'))->render(), 'text/plain');
             }
         );
     }
